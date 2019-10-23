@@ -7,19 +7,20 @@ let driver = new Builder()
     .build();
 
 
-
-describe("Search results",() => {
-
-    //Searches for "iTechArt"
-    beforeAll(async () => {
+     //Searches for "iTechArt"
+     beforeAll(async () => {
         await driver.get('http://www.google.com');
         await driver.findElement(By.name("q")).sendKeys("iTechArt", Key.RETURN);
     }, 15000);
 
     //Quits chrome after all tests are done
-    afterAll(() => {
-        driver.quit();
+    afterAll(async () => {
+        await driver.quit();
     });
+
+describe("Search results",() => {
+
+   
 
     //Checks if results amount is above given limit
     describe("amount should be", () => {
