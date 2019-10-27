@@ -1,0 +1,25 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "Sixth task",
+  "main": "index.js",
+  "dependencies": {
+    "chromedriver": "^77.0.0",
+    "jasmine": "^3.5.0",
+    "selenium-webdriver": "^4.0.0-alpha.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Giksai/automation_mikhailouski_5_2.git"
+  },
+  "author": "Mikhailouski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Giksai/automation_mikhailouski_5_2/issues"
+  },
+  "homepage": "https://github.com/Giksai/automation_mikhailouski_5_2#readme"
+}
