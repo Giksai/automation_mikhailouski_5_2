@@ -1,6 +1,11 @@
 const data = require("./data"),
     resultsPage = require("../pages/pages").resultsPage;
 
+
+afterAll(async () => {
+    await resultsPage.close();
+});
+
 describe("Search results",() => {
 
     beforeAll(async () => {

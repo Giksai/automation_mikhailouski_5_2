@@ -5,9 +5,7 @@ const driver = new Builder()
         .forBrowser('chrome')
         .build();
 
-afterAll(async () => {
-    await driver.quit();
-});
+
 
 const resultsPage = {
 
@@ -46,6 +44,10 @@ const resultsPage = {
     open: async function() {
         await driver.get('http://www.google.com');
         await driver.findElement(By.name("q")).sendKeys("iTechArt", Key.RETURN);
+    },
+
+    close: async function() {
+        await driver.quit();
     }
 }
 
