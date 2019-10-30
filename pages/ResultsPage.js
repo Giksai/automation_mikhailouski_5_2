@@ -1,22 +1,16 @@
-require('chromedriver');
-const {Builder, By, Key} = require("selenium-webdriver");
+const {By, Key} = require("selenium-webdriver"),
+    {driver, Page} = require("./basePage");
 
-const driver = new Builder()
-        .forBrowser('chrome')
-        .build();
-
-
-
-const resultsPage = {
+class ResultsPage extends Page {
 
     //Returns amount of results for "iTechArt" word search
-    resultsAmount: async function() {
+    async resultsAmount() {
         let resultText = (await driver.findElement(By.id("resultStats")).getText()).split(" ");
         return parseInt(resultText[2] + resultText[3]);
-    },
+    }
 
     //Returns searching time in milliseconds
-    searchingTime: async function() {
+    async searchingTime() {
         let dividedTimeText = (await driver.findElement(By.id("resultStats")).getText())
         .split(" ")[4]
         .replace("(", "")
@@ -24,33 +18,31 @@ const resultsPage = {
 
         //Converting (seconds,milliseconds) to (milliseconds)
         return parseInt(dividedTimeText[1]) + (parseInt(dividedTimeText[0]) * 1000);
-    },
+    }
 
     //Returns array of each label's text
-    labelsText: async function() {
+    async labelsText() {
         let labelsTextArray = [];
         let labels = (await driver.findElements(By.className("g")))
         for(const label of labels) {
             labelsTextArray.push(await label.getText());
         }
         return labelsTextArray;
-    },
+    }
 
      //Advances to the next page when all results in the current page are processed
-    nextPage: async function() {
+    async nextPage() {
         (await driver.findElement(By.xpath("//a[@class='pn']"))).click();
-    },
+    }
 
-    open: async function() {
-        await driver.get('http://www.google.com');
+    async open() {
+        await super.open('http://www.google.com');
         await driver.findElement(By.name("q")).sendKeys("iTechArt", Key.RETURN);
-    },
+    }
 
-    close: async function() {
-        await driver.quit();
+    async close() {
+        await super.close();
     }
 }
 
-module.exports = {
-    resultsPage : resultsPage
-}
+module.exports = ResultsPage;

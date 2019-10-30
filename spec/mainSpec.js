@@ -1,24 +1,26 @@
 const data = require("./data"),
-    resultsPage = require("../pages/pages").resultsPage;
+    ResultsPage = require("../pages/ResultsPage");
 
+var RPage = new ResultsPage();
 
 afterAll(async () => {
-    await resultsPage.close();
+    await RPage.close();
 });
 
 describe("Search results",() => {
 
     beforeAll(async () => {
-        await resultsPage.open();
+        
+        await RPage.open();
     }, 15000);
     
     //Checks if results amount is above given limit
     describe("amount should be", () => {
         it(`above given limit (${data.resultsBelowLimit})`, async () => {
-            expect(await resultsPage.resultsAmount()).toBeGreaterThan(data.resultsBelowLimit);
+            expect(await RPage.resultsAmount()).toBeGreaterThan(data.resultsBelowLimit);
             
-            console.log("Results amount: " + (await resultsPage.resultsAmount()));
-            console.log("Searching time (in milliseconds): " + (await resultsPage.searchingTime()));
+            console.log("Results amount: " + (await RPage.resultsAmount()));
+            console.log("Searching time (in milliseconds): " + (await RPage.searchingTime()));
         });
     });
     
@@ -27,16 +29,16 @@ describe("Search results",() => {
 
         //Advances to the next page when all results in the current page are processed
         afterEach(async () => {
-            await resultsPage.nextPage();
+            await RPage.nextPage();
         });
 
         it("in the first page", async () => {
-            for(const labelText of await resultsPage.labelsText()) {
+            for(const labelText of await RPage.labelsText()) {
                 expect(labelText.toLowerCase()).toContain(data.searchWord.toLowerCase());
             }
         }, 10000);
         it("in the second page", async () => {
-            for(const labelText of await resultsPage.labelsText()) {
+            for(const labelText of await RPage.labelsText()) {
                 expect(labelText.toLowerCase()).toContain(data.searchWord.toLowerCase());
             }
         }, 10000);
