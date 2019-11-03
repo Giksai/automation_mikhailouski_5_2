@@ -1,3 +1,7 @@
 node_modules/
+logs/
+allure-results/
+allure-report/
 temp.*
 .DS_Store
+log4jsExample.json
