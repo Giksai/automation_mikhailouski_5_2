@@ -23,7 +23,7 @@ class ResultsPage extends Page {
         .split(",");
 
         //Converting (seconds,milliseconds) to (milliseconds)
-        logger.debug("searchingTime: converting acquired to milliseconds");
+        logger.debug("searchingTime: converting acquired text to milliseconds");
         return parseInt(dividedTimeText[1]) + (parseInt(dividedTimeText[0]) * 1000);
     }
 
