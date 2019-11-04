@@ -25,8 +25,8 @@ describe("Search results",() => {
             logger.info("Starting results amount check");
             expect(await RPage.resultsAmount()).toBeGreaterThan(data.resultsBelowLimit);
             
-            console.log("Results amount: " + (await RPage.resultsAmount()));
-            console.log("Searching time (in milliseconds): " + (await RPage.searchingTime()));
+            logger.info("Results amount: " + (await RPage.resultsAmount()));
+            logger.info("Searching time (in milliseconds): " + (await RPage.searchingTime()));
             logger.info("Results amount check has ended");
         });
     });
