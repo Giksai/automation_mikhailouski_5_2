@@ -11,8 +11,7 @@
       },
       "fileLog": {
         "type": "file",
-        "filename": "logs/log.log",
-        "pattern": "-yyyy-MM-dd"
+        "filename": "logs/log.log"
       }
     },
     "categories": {

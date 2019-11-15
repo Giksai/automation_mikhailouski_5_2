@@ -1,60 +1,44 @@
-const data = require("./data"),
-    ResultsPage = require("../pages/ResultsPage"),
-    log4js = require("../config/loggerConfigurator");
+const log4js = require("../config/loggerConfigurator"),
+    googleApi = require("../google/googleAPI"),
+    data = require("../google/data");
 
+const logger = log4js.getLogger("default");
 
-let RPage = new ResultsPage();
-
-let logger = log4js.getLogger("default");
+beforeAll(async () => {
+    logger.info("Starting tests");
+});
 
 afterAll(async () => {
-    logger.info("All tests are completed, exiting");
-    await RPage.close();
+    logger.info("All tests are done, exiting");
 });
 
-describe("Search results",() => {
+//Main describe
+describe("Gmail messages ",() => {
 
-    beforeAll(async () => {
-        logger.info("Opening Results page");
-        await RPage.open();
-    }, 15000);
-    
-    //Checks if results amount is above given limit
-    describe("amount should be", () => {
-        it(`above given limit (${data.resultsBelowLimit})`, async () => {
-            logger.info("Starting results amount check");
-            expect(await RPage.resultsAmount()).toBeGreaterThan(data.resultsBelowLimit);
-            
-            logger.info("Results amount: " + (await RPage.resultsAmount()));
-            logger.info("Searching time (in milliseconds): " + (await RPage.searchingTime()));
-            logger.info("Results amount check has ended");
-        });
-    });
-    
-    //Checks if result labels contains given word
-    describe(`should contain '${data.searchWord}' word`, () => {
-        logger.info("Starting results page check");
-        //Advances to the next page when all results in the current page are processed
-        afterEach(async () => {
-            logger.info("Advancing to the next page");
-            await RPage.nextPage();
-        });
+    //Messages amount test
+    it(`amount should not be greater than ${data.messagesAmount}`,async () => {
+        logger.info("Starting messages amount test");
+        expect(await googleApi.getMessagesAmount()).toEqual(data.messagesAmount);
+        logger.info("Messages amount test completed");
+    }, 30000);
 
-        it("in the first page", async () => {
-            logger.info("Starting results page check on the first page");
-            for(const labelText of await RPage.labelsText()) {
-                expect(labelText.toLowerCase()).toContain(data.searchWord.toLowerCase());
-            }
-            logger.info("Results check of the first page has ended");
-        }, 10000);
-        it("in the second page", async () => {
-            logger.info("Starting results page check on the second page");
-            for(const labelText of await RPage.labelsText()) {
-                expect(labelText.toLowerCase()).toContain(data.searchWord.toLowerCase());
-            }
-            logger.info("Results check of the second page has ended");
-        }, 10000);
-    });
+    //Subject's contents check
+    it(`should include subject with content: ${data.subjectToSearch}`,async () => {
+        logger.info("Starting subject check test");
+        for(let msg of (await googleApi.getAllMessages())) {
+
+            //Getting message info
+            const subject = await googleApi.getMessageSubject(msg.id);
+            const deadline = await googleApi.getMessageDeadline(msg.id);
+            const body = await googleApi.getMessageBody(msg.id);
+            expect(subject).toContain(data.subjectToSearch);
+
+            //Printing message info
+            logger.info(`Задание: ${subject}. Срок выполнения: ${deadline} \n
+            Тело письма: \n
+            ${body}`);
+        }
+        logger.info("Subject check test completed");
+    }, 30000);
+
 });
-
-
