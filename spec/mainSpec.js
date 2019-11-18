@@ -34,9 +34,11 @@ describe("Gmail messages ",() => {
             expect(subject).toContain(data.subjectToSearch);
 
             //Printing message info
-            logger.info(`Задание: ${subject}. Срок выполнения: ${deadline} \n
-            Тело письма: \n
-            ${body}`);
+            if(subject.includes(data.subjectToSearch)) {
+                logger.info(`Задание: ${subject}. Срок выполнения: ${deadline} \n
+                Тело письма: \n
+                ${body}`);
+            }
         }
         logger.info("Subject check test completed");
     }, 30000);
