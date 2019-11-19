@@ -1,0 +1,21 @@
+{
+  "name": "second_task",
+  "version": "1.0.0",
+  "description": "Command example: node program.js /Users/evgenij/Projects/automation_mikhailouski_5_2 .txt </br> Which searches for the last created file with .txt extention in given directory.",
+  "main": "program.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Giksai/automation_mikhailouski_5_2.git"
+  },
+  "keywords": [
+    "Automation"
+  ],
+  "author": "Mikhailouski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Giksai/automation_mikhailouski_5_2/issues"
+  },
+  "homepage": "https://github.com/Giksai/automation_mikhailouski_5_2#readme"
+}

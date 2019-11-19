@@ -1,84 +1,161 @@
-const http = require('http'),
-    server = http.createServer(),
-    pathM = require('path');
-    fs = require ('fs'),
-    url = require('url');
+const pathM = require('path'),
+    fs = require ('fs');
 
 const args = process.argv;
+let foundFiles = [];
+let maxFilesToShow = 1000,
+    currentFilesToShow = 0;
+let maxNestedDirectories = 1000,
+    currentNestedDirectories = 0;
+let extension;
 
-//Starting point
-server.listen(8080, () => {
-    if(args.length !== 4) {
-        console.log('Wrong commands!');
-        console.log('Use: node program.js <path> <extention>');
-        console.log('Example: node program.js /Users/evgenij/Projects/ .txt');
+/**
+ * Entry point
+ * Arguments:
+ * -Path to the folder
+ * -File extension
+ * -[Optional] maxFiles: Maximum amount of shown files
+ * -[Optional] maxDir: Maximum amount of nested directories
+ */
+(async () => {
+    if(args.length < 4 || args.length > 6) {
+        wrongArgumentsHandler();
+    }
+    let path;
+    path = args[2];
+    extension = args[3];
+
+    //Checking arguments
+    if(!fs.existsSync(path)) {
+        console.error("Given directory does not exist");
         process.exit();
     }
+    if(!extension.match(/\.[a-zA-Z0-9]*/)) {
+        console.error("Wrong file extension");
+        process.exit();
+    }
+    for(let argument of args) {
+        if(argument.match(/^maxFiles:\d+/)) {
+            maxFilesToShow = parseInt(argument.split(':')[1]);
+        }
+        if(argument.match(/^maxDir:\d+/)) {
+            maxNestedDirectories = parseInt(argument.split(':')[1]);
+        }
+    }
 
-    execute(args[2], args[3]);
-});
+    if(maxFilesToShow) console.log("maxFiles: " + maxFilesToShow);
+    if(maxNestedDirectories) console.log("maxDir: " + maxNestedDirectories);
+    
+    execute(path);
+})();
 
-function execute(path, ext) {
-    //Getting all files in given directory
-    fs.readdir(path, (error, files) => {
-        if(error) {
-            console.log(error);
+/**
+ * Called, when user inputs wrong arguments
+ */
+function wrongArgumentsHandler() {
+    console.error('Wrong arguments!');
+    console.info('Use: node program.js <path> <extention> [maxFiles:<shown files amount>] [maxDir:<nested directories amount>]');
+    console.info('Example: node program.js /Users/evgenij/Projects/ .txt maxFiles:34 maxDir:59');
+    console.info('Two last parameters are optional and can be written in any order');
+    process.exit();
+}
+
+/**
+ * Main logic
+ */
+function execute(path) {
+        //Recursively finds all files in the current directory and in all nested directories, 
+        //if there is no additional arguments
+        if(recursiveSearch(path) == "No files found") {
+            console.log("Given folder does not contain any files!");
             process.exit();
         }
-
-        //Time variable that is used to find a file with the last created time
-        let compareTime = Date.parse('1/1/1970 00:00');
-        //Holds last created file
-        let lastCreatedFileHolder = files[0];
-        let filesWithCorrectExtention = [];
-
-        //Filtering files with the wrong extention
-        //and searching for the last created file
-        files.forEach((file) => {
-            if(pathM.extname(file) !== ext) {
-                return;
-            }
-                
-            filesWithCorrectExtention.push(file);
-
-            let filePath = pathM.join(path, file);
-            let createdTime = fs.statSync(filePath).ctime;
-            
-            if(createdTime > compareTime) {
-                compareTime = createdTime;
-                lastCreatedFileHolder = file;
-            }
-        });
-
-        //Getting creation time of the last created file
-        var lastCreatedFileTime = fs.statSync(lastCreatedFileHolder).ctime;
-        var closeCreatedFiles = [];
-
-        //Finding files with created time within 10
-        //seconds from a last created file
-        filesWithCorrectExtention.forEach((file) => {
-            let createdTime = fs.statSync(file).ctime;
-            if(lastCreatedFileTime.getTime() - createdTime.getTime() < 10000
-            && file !== lastCreatedFileHolder) {
-                closeCreatedFiles.push(file);
-            }
-        });
-
-        //Printing found files
-        if(pathM.extname(lastCreatedFileHolder) !== ext) {
-            console.log("File not found");
-        } else {
-            console.log("Last created file: " + lastCreatedFileHolder);
+        if(foundFiles.length == 0) {
+            console.log("Did not found any files");
+            process.exit();
         }
-        
-        //Printing files created within 10 seconds of last created file
-        if(closeCreatedFiles.length > 0) {
-            console.log("Files created within 10 seconds:");
-            closeCreatedFiles.forEach((file) => {
-                console.log(file);
-            });
+        console.log("Finished searching");
+
+        let lastCreatedFile = findLastCreatedFile();
+        console.log("Last created file: " + lastCreatedFile);
+
+        printFoundFiles(lastCreatedFile);
+}
+
+function printFoundFiles(lastCreatedFile) {
+    if(maxFilesToShow != 1000) {
+        console.log(`Printing files, max amount is ${maxFilesToShow}:`);
+        for(let file of foundFiles) {
+            if(file != lastCreatedFile)
+            console.log(file);
         }
-        process.exit();
-    });
+    } else {
+        console.log("Printing files, creation time of which is not greater than 10 seconds relative to the creation time of the last created file:");
+        for(let file of findRecentCreatedFiles(lastCreatedFile)) {
+            console.log(file);
+        }
+    }
+}
+
+function findLastCreatedFile() {
+    let compareTime = Date.parse('1/1/1970 00:00');
+    let lastCreatedFileHolder;
+
+    for(let file of foundFiles) {
+        let createdTime = fs.statSync(file).ctime;
+        if(createdTime > compareTime) {
+            compareTime = createdTime;
+            lastCreatedFileHolder = file;
+        }
+    }
+
+    return lastCreatedFileHolder;
+}
+
+/**
+ * Finds files, creation time of which is not greater than 10 seconds 
+ * relative to the creation time of the last created file
+ */
+function findRecentCreatedFiles(lastCreatedFile) {
+    let recentCreatedFiles = [];
     
+    for(let file of foundFiles) {
+        if(file != lastCreatedFile) {
+            if((fs.statSync(lastCreatedFile).ctime.getTime() - fs.statSync(file).ctime.getTime()) < 10000) {
+                recentCreatedFiles.push(file);
+            }
+        }
+    }
+    return recentCreatedFiles;
+}
+
+/**
+ * Fills foundFiles array with all files in the current and nested directories
+ * @param {string} currentPath Starting directory
+ */
+function recursiveSearch(currentPath) {
+    const directoryContents = fs.readdirSync(currentPath);
+    if(directoryContents.length == 0) return "No files found";
+    for(entity of directoryContents) {
+        if(currentFilesToShow > maxFilesToShow
+            || currentNestedDirectories >= maxNestedDirectories) {
+                return;
+        } 
+        const path = pathM.join(currentPath, entity);
+        try {
+            if(fs.lstatSync(path).isDirectory() && maxNestedDirectories) {
+                currentNestedDirectories++;
+                recursiveSearch(path);
+            }
+            if(fs.lstatSync(path).isFile()) {
+                if((pathM.extname(path)) != extension) {
+                    continue;
+                }
+                currentFilesToShow++;
+                foundFiles.push(path);
+            }
+        } catch (error){
+            console.error("Cannot access file " + path + " \n Error: " + error);
+        }
+    }
 }
