@@ -7,10 +7,10 @@ const {Builder, By, Key} = require("selenium-webdriver"),
 let driver;
 let argumentSearch = "--browser=";
 
-function getDriver() {
+async function getDriver() {
     for(let argument of process.argv) {
         if(argument.includes(argumentSearch)) {
-            driver = new Builder()
+            driver = await new Builder()
                 .forBrowser(argument.replace(argumentSearch, ""))
                 .build();
         }
@@ -19,8 +19,8 @@ function getDriver() {
 
      //Searches for "iTechArt"
      beforeAll(async () => {
-        getDriver();
-        await driver.get('http://www.google.com');
+        await getDriver();
+        await driver.get('https://www.google.com');
         await driver.findElement(By.name("q")).sendKeys("iTechArt", Key.RETURN);
     }, 15000);
 
