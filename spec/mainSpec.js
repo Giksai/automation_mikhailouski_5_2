@@ -1,18 +1,30 @@
 const {Builder, By, Key} = require("selenium-webdriver"),
-    chrome = require("chromedriver"),
     data = require("./data");
 
-let driver = new Builder()
-    .forBrowser('chrome')
-    .build();
+    require("geckodriver");
+    require("chromedriver");
+
+let driver;
+let argumentSearch = "--browser=";
+
+function getDriver() {
+    for(let argument of process.argv) {
+        if(argument.includes(argumentSearch)) {
+            driver = new Builder()
+                .forBrowser(argument.replace(argumentSearch, ""))
+                .build();
+        }
+    }
+}
 
      //Searches for "iTechArt"
      beforeAll(async () => {
+        getDriver();
         await driver.get('http://www.google.com');
         await driver.findElement(By.name("q")).sendKeys("iTechArt", Key.RETURN);
     }, 15000);
 
-    //Quits chrome after all tests are done
+    //Quits browser after all tests are done
     afterAll(async () => {
         await driver.quit();
     });
@@ -25,7 +37,7 @@ describe("Search results",() => {
             expect(await getResultsAmount()).toBeGreaterThan(data.resultsBelowLimit);
             console.log("Results amount: " + (await getResultsAmount()));
             console.log("Searching time (in milliseconds): " + (await getSearchingTime()));
-        });
+        }, 15000);
     });
     
     //Checks if result labels contains given word
@@ -34,18 +46,18 @@ describe("Search results",() => {
         //Advances to the next page when all results in the current page are processed
         afterEach(async () => {
             (await driver.findElement(By.xpath("//a[@class='pn']"))).click();
-        });
+        }, 15000);
 
         it("in the first page", async () => {
             (await getLabelsText()).forEach((text) => {
                 expect(text.toLowerCase()).toContain(data.searchWord.toLowerCase());
             });
-        }, 10000);
+        }, 15000);
         it("in the second page", async () => {
             (await getLabelsText()).forEach((text) => {
                 expect(text.toLowerCase()).toContain(data.searchWord.toLowerCase());
             });
-        }, 10000);
+        }, 15000);
     });
 });
 
@@ -73,11 +85,4 @@ async function getLabelsText() {
         labelsTextArray.push(await labels[i].getText());
     }
     return labelsTextArray;
-}
-
-//Waits 10 seconds until given element appears
-function waitForElement(locator) {
-    return (new WebDriverWait(driver, 10))
-        .until(ExpectedConditions.presenceOfElementLocated(
-                locator));
 }
