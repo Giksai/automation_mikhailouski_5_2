@@ -1,0 +1,24 @@
+{
+  "name": "fifth_task",
+  "version": "1.0.0",
+  "description": "To launch, install following npm packages: chromedriver, selenium-webdriver, jasmine. </br>Then enter 'jasmine' command in project's directory. </br> </br> Configuration data is located in spec/data.js file. </br> </br>",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Giksai/automation_mikhailouski_5_2.git"
+  },
+  "author": "Mikhailouski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Giksai/automation_mikhailouski_5_2/issues"
+  },
+  "homepage": "https://github.com/Giksai/automation_mikhailouski_5_2#readme",
+  "dependencies": {
+    "chromedriver": "^78.0.1",
+    "jasmine": "^3.5.0",
+    "selenium-webdriver": "^4.0.0-alpha.5"
+  }
+}

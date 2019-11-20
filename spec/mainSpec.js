@@ -6,7 +6,6 @@ let driver = new Builder()
     .forBrowser('chrome')
     .build();
 
-
      //Searches for "iTechArt"
      beforeAll(async () => {
         await driver.get('http://www.google.com');
@@ -20,12 +19,10 @@ let driver = new Builder()
 
 describe("Search results",() => {
 
-   
-
     //Checks if results amount is above given limit
     describe("amount should be", () => {
         it(`above given limit (${data.resultsBelowLimit})`, async () => {
-            expect(await getResultsAmount() > data.resultsBelowLimit).toBe(true);
+            expect(await getResultsAmount()).toBeGreaterThan(data.resultsBelowLimit);
             console.log("Results amount: " + (await getResultsAmount()));
             console.log("Searching time (in milliseconds): " + (await getSearchingTime()));
         });
@@ -41,12 +38,12 @@ describe("Search results",() => {
 
         it("in the first page", async () => {
             (await getLabelsText()).forEach((text) => {
-                expect(text.toLowerCase().includes(data.searchWord.toLowerCase())).toBe(true);
+                expect(text.toLowerCase()).toContain(data.searchWord.toLowerCase());
             });
         }, 10000);
         it("in the second page", async () => {
             (await getLabelsText()).forEach((text) => {
-                expect(text.toLowerCase().includes(data.searchWord.toLowerCase())).toBe(true);
+                expect(text.toLowerCase()).toContain(data.searchWord.toLowerCase());
             });
         }, 10000);
     });
