@@ -1,6 +1,7 @@
 const {By, Key} = require("selenium-webdriver"),
     {driver, Page} = require("./basePage");
 
+
 class ResultsPage extends Page {
 
     //Returns amount of results for "iTechArt" word search

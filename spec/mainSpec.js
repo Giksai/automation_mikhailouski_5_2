@@ -10,7 +10,6 @@ afterAll(async () => {
 describe("Search results",() => {
 
     beforeAll(async () => {
-        
         await RPage.open();
     }, 15000);
     
