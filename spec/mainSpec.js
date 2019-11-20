@@ -26,19 +26,17 @@ describe("Gmail messages ",() => {
     it(`should include subject with content: ${data.subjectToSearch}`,async () => {
         logger.info("Starting subject check test");
         for(let msg of (await googleApi.getAllMessages())) {
-
-            //Getting message info
             const subject = await googleApi.getMessageSubject(msg.id);
-            const deadline = await googleApi.getMessageDeadline(msg.id);
-            const body = await googleApi.getMessageBody(msg.id);
-            expect(subject).toContain(data.subjectToSearch);
-
-            //Printing message info
             if(subject.includes(data.subjectToSearch)) {
+                //Getting message info
+                const deadline = await googleApi.getMessageDeadline(msg.id);
+                const body = await googleApi.getMessageBody(msg.id);
+                //Printing message info
                 logger.info(`Задание: ${subject}. Срок выполнения: ${deadline} \n
                 Тело письма: \n
                 ${body}`);
             }
+            expect(subject).toContain(data.subjectToSearch);
         }
         logger.info("Subject check test completed");
     }, 30000);
