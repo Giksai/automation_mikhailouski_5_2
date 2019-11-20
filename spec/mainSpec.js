@@ -1,20 +1,32 @@
+require('chromedriver');
+require('geckodriver');
+
 const {Builder, By, Key} = require("selenium-webdriver"),
     data = require("./data");
 
-    require("geckodriver");
-    require("chromedriver");
-
 let driver;
-let argumentSearch = "--browser=";
+const argumentSearch = "--browser=";
 
 async function getDriver() {
     for(let argument of process.argv) {
         if(argument.includes(argumentSearch)) {
+            const browser = argument.replace(argumentSearch, "");
+            if(browser !== "chrome" && browser !== "firefox") {
+                wrongArguments();
+            }
             driver = await new Builder()
-                .forBrowser(argument.replace(argumentSearch, ""))
+                .forBrowser(browser)
                 .build();
         }
     }
+    if(!driver) {
+        wrongArguments();
+    }
+}
+
+function wrongArguments() {
+    console.error("Wrong arguments!");
+    process.exit();
 }
 
      //Searches for "iTechArt"
