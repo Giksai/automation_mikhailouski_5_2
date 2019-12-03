@@ -4,10 +4,10 @@ const log4js = require("../logger/loggerConfigurator"),
 const logger = log4js.getLogger("default");
 
 class LoginPage extends BasePage {
-        loginTextBoxSelector = "android=new UiSelector().resourceId('user_username')",
-        passwordTextBoxSelector =  "android=new UiSelector().resourceId('user_password')",
-        submitButtonSelector = "android=new UiSelector().resourceId('submit')",
-        errorMessageSelector = "android=new UiSelector().className('android.view.View').textContains('error')"
+    loginTextBoxSelector = "android=new UiSelector().resourceId('user_username')";
+    passwordTextBoxSelector =  "android=new UiSelector().resourceId('user_password')";
+    submitButtonSelector = "android=new UiSelector().resourceId('submit')";
+    errorMessageSelector = "android=new UiSelector().className('android.view.View').textContains('error')";
 
     //Can be used with both password and login text boxes
     async fillTextBoxWithRandomText(boxSelector) {

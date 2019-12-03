@@ -10,14 +10,14 @@ describe('Application ', () => {
 
     it('should show error message when entering wrong login/password', async () => {
         logger.info("Starting main test");
-        await StartingPage.clickOnElement(StartingPage.selectors.logoSelector, 5);
-        await StartingPage.clickOnElement(StartingPage.selectors.enviromentButton);
+        await StartingPage.clickOnElement(StartingPage.logoSelector, 5);
+        await StartingPage.clickOnElement(StartingPage.enviromentButton);
         await StartingPage.pressBackButton();
-        await StartingPage.clickOnElement(StartingPage.selectors.loginSelector);
-        await LoginPage.fillTextBoxWithRandomText(LoginPage.selectors.loginTextBoxSelector);
-        await LoginPage.fillTextBoxWithRandomText(LoginPage.selectors.passwordTextBoxSelector);
-        await LoginPage.clickOnElement(LoginPage.selectors.submitButtonSelector);
-        expect(await LoginPage.getTextOfElement(LoginPage.selectors.errorMessageSelector))
+        await StartingPage.clickOnElement(StartingPage.loginSelector);
+        await LoginPage.fillTextBoxWithRandomText(LoginPage.loginTextBoxSelector);
+        await LoginPage.fillTextBoxWithRandomText(LoginPage.passwordTextBoxSelector);
+        await LoginPage.clickOnElement(LoginPage.submitButtonSelector);
+        expect(await LoginPage.getTextOfElement(LoginPage.errorMessageSelector))
             .toContain("We didn't recognize the username or password you entered. Please try again.");
     });
 });
