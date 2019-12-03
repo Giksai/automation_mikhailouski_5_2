@@ -4,7 +4,7 @@
   "description": "Tenth task in QA automation training",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/jasmine"
+    "test": "node runner.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/Giksai/automation_mikhailouski_5_2#readme",
   "devDependencies": {
+    "@wdio/appium-service": "^5.16.10",
     "@wdio/cli": "^5.16.10",
+    "@wdio/jasmine-framework": "^5.16.10",
     "@wdio/local-runner": "^5.16.10",
     "@wdio/mocha-framework": "^5.16.10",
     "@wdio/spec-reporter": "^5.16.5",
@@ -29,6 +31,7 @@
     "wdio-chromedriver-service": "^5.0.2"
   },
   "dependencies": {
-    "jasmine": "^3.5.0"
+    "appium": "^1.15.1",
+    "log4js": "^6.1.0"
   }
 }

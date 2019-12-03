@@ -1,0 +1,20 @@
+{
+    "appenders": {
+      "consoleFiltered": {
+        "type": "logLevelFilter",
+        "appender": "consoleLog",
+        "level": "DEBUG"
+      },
+      "consoleLog": {
+        "type": "stdout",
+        "level": "DEBUG"
+      },
+      "fileLog": {
+        "type": "file",
+        "filename": "logs/log.log"
+      }
+    },
+    "categories": {
+      "default": { "appenders": [ "consoleLog", "fileLog" ], "level": "TRACE"}
+    }
+  }
