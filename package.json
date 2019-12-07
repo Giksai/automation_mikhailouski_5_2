@@ -1,0 +1,25 @@
+{
+  "name": "automation_mikhailouski_5_2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Giksai/automation_mikhailouski_5_2.git"
+  },
+  "keywords": [
+    "Automation"
+  ],
+  "author": "Mikhailouski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Giksai/automation_mikhailouski_5_2/issues"
+  },
+  "homepage": "https://github.com/Giksai/automation_mikhailouski_5_2#readme",
+  "dependencies": {
+    "log4js": "^6.1.0"
+  }
+}
