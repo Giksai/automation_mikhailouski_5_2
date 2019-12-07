@@ -1,20 +1,5 @@
-var debug = require('debug')('log4js-example');
-var fs = require('fs')
-
-// /**
-//  * Clearing reports directory
-//  */
-// try {
-//     if(fs.existsSync('./reports')) {
-//             require("rimraf").sync('./reports');
-//         }
-//         fs.mkdirSync('./reports');
-//   } catch (e) {
-//     if (e.code != 'EEXIST') {
-//       console.error("Could not delete log directory, error was: ", e);
-//       process.exit(1);
-//     }
-//   }
+const debug = require('debug')('log4js-example');
+const fs = require('fs')
 
 /**
  * Makes log directory if it does not exist
