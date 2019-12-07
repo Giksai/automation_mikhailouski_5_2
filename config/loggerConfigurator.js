@@ -1,4 +1,3 @@
-const debug = require('debug')('log4js-example');
 const fs = require('fs')
 
 /**
