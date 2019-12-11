@@ -3,9 +3,8 @@ const pathM = require('path'),
 
 const args = process.argv;
 let foundFiles = [];
-let maxFilesToShow = 1000,
-    currentFilesToShow = 0;
-let maxNestedDirectories = 1000,
+let maxFilesToShow = 10000;
+let maxNestedDirectories = 10000,
     currentNestedDirectories = 0;
 let extension;
 
@@ -66,11 +65,11 @@ function wrongArgumentsHandler() {
 function execute(path) {
         //Recursively finds all files in the current directory and in all nested directories, 
         //if there is no additional arguments
-        if(recursiveSearch(path) == "No files found") {
+        if(recursiveSearch(path) === "No files found") {
             console.log("Given folder does not contain any files!");
             process.exit();
         }
-        if(foundFiles.length == 0) {
+        if(foundFiles.length === 0) {
             console.log("Did not found any files");
             process.exit();
         }
@@ -83,17 +82,11 @@ function execute(path) {
 }
 
 function printFoundFiles(lastCreatedFile) {
-    if(maxFilesToShow != 1000) {
-        console.log(`Printing files, max amount is ${maxFilesToShow}:`);
-        for(let file of foundFiles) {
-            if(file != lastCreatedFile)
-            console.log(file);
-        }
-    } else {
-        console.log("Printing files, creation time of which is not greater than 10 seconds relative to the creation time of the last created file:");
-        for(let file of findRecentCreatedFiles(lastCreatedFile)) {
-            console.log(file);
-        }
+    console.log("Printing files, creation time of which is not greater than 10 seconds relative to the creation time of the last created file:");
+    let recentCreatedFiles = findRecentCreatedFiles(lastCreatedFile);
+    for(let i = 0; i < recentCreatedFiles.length; i++) {
+        if(i >= maxFilesToShow) return;
+        console.log(recentCreatedFiles[i]);
     }
 }
 
@@ -120,7 +113,7 @@ function findRecentCreatedFiles(lastCreatedFile) {
     let recentCreatedFiles = [];
     
     for(let file of foundFiles) {
-        if(file != lastCreatedFile) {
+        if(file !== lastCreatedFile) {
             if((fs.statSync(lastCreatedFile).ctime.getTime() - fs.statSync(file).ctime.getTime()) < 10000) {
                 recentCreatedFiles.push(file);
             }
@@ -135,23 +128,19 @@ function findRecentCreatedFiles(lastCreatedFile) {
  */
 function recursiveSearch(currentPath) {
     const directoryContents = fs.readdirSync(currentPath);
-    if(directoryContents.length == 0) return "No files found";
+    if(directoryContents.length === 0) return "No files found";
     for(entity of directoryContents) {
-        if(currentFilesToShow > maxFilesToShow
-            || currentNestedDirectories >= maxNestedDirectories) {
-                return;
-        } 
         const path = pathM.join(currentPath, entity);
         try {
-            if(fs.lstatSync(path).isDirectory() && maxNestedDirectories) {
+            if(fs.lstatSync(path).isDirectory() 
+                && currentNestedDirectories <= maxNestedDirectories) {
                 currentNestedDirectories++;
                 recursiveSearch(path);
             }
             if(fs.lstatSync(path).isFile()) {
-                if((pathM.extname(path)) != extension) {
+                if((pathM.extname(path)) !== extension) {
                     continue;
                 }
-                currentFilesToShow++;
                 foundFiles.push(path);
             }
         } catch (error){
