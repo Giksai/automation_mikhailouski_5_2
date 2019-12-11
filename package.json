@@ -20,6 +20,10 @@
   },
   "homepage": "https://github.com/Giksai/automation_mikhailouski_5_2#readme",
   "dependencies": {
-    "log4js": "^6.1.0"
+    "chromedriver": "^78.0.1",
+    "geckodriver": "^1.19.1",
+    "jasmine": "^3.5.0",
+    "log4js": "^6.1.0",
+    "selenium-webdriver": "^4.0.0-alpha.5"
   }
 }

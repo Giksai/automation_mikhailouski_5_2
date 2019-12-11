@@ -16,6 +16,6 @@ try {
  * Initialise log4js first, so we don't miss any log messages
  */
 const log4js = require('log4js');
-log4js.configure('./config/log4js.json');
+log4js.configure('./logger/log4js.json');
 
 module.exports = log4js;
