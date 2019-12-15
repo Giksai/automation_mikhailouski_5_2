@@ -41,8 +41,11 @@ async function checkForFile() {
     const files = fs.readdirSync(config.downloadPath);
     for(let file of files) {
         if(file.includes(fileName.toLowerCase())) {
-            logger.debug(`Found steam file.`);
-            return true;
+            //logger.debug(`checkForFile: File extension name is -${path.extname(file)}-`);
+            if(path.extname(file) !== '.crdownload') {
+                logger.debug(`Found steam file.`);
+                return true;
+            }
         }
     }
     return false;
