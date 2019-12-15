@@ -1,44 +1,34 @@
-const {driver, BasePage} = require('./basePage'),
-    {By} = require('selenium-webdriver');
+const {driver, BasePage, logger} = require('./basePage'),
+    {By, until} = require('selenium-webdriver');
 
-const selectors = {
-    genreId: 'genre_tab',
-
+const genreMenuSelectors = {
+    games: 'div#genre_tab'
 };
+const genreElementSelectors = {
+    action: 'Экшен'
+};
+const privateSelectors = {
+    menuItems: '.popup_menu_item'
+};
+const storeLink = 'https://store.steampowered.com/';
 
 class StartingPage extends BasePage {
 
-    async goToAction1() {
-        await driver.findElement(By.css("a[href^='https://store.steampowered.com/tags/en/Action/']")).click;
-    }
-    async goToAction2() {
-        await driver.findElement(
-            {
-                className: 'gutter_item',
-                arguments: 'href=https://store.steampowered.com/tags/en/Action/?snr=1_4_4__125'
-            }
-        ).click();
-    }
-    async goToAction3() {
-        let foundElements = await driver.findElements(By.className('gutter_item'));
-        console.log('Length: ' + foundElements.length);
-        for(let element of foundElements) {
-            console.log("Text: " + (await element.getText()));
-            if((await element.getText()).includes('Action')
-            || (await element.getText()).includes('Экшен')) {
-                console.log('Found button!');
-                await element.click();
-            }
-        }
+    async navigateTo(genreMenuSelector, genreElementSelector) {
+        logger.debug(`navigateTo: Trying to navigate to ${genreElementSelector}.`);
+        await super.hoverOverElement(genreMenuSelector);
+        await (await super.findElementByTextAndCss(privateSelectors.menuItems, genreElementSelector)).click();
+        logger.debug(`navigateTo: Navigated successfully.`);
     }
 
-    async getHeaderText() {
-        return await driver.findElement(By.className('pageheader')).getText();
+    async open() {
+        await super.open(storeLink);
     }
 
 }
 
 module.exports = {
     startingPage: new StartingPage(),
-    selectors: selectors
+    genreMenuSelectors: genreMenuSelectors,
+    genreElementSelectors: genreElementSelectors
 }

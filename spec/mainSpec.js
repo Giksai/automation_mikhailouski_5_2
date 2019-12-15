@@ -1,24 +1,55 @@
 const data = require('./data'),
     logger = require('../logger/loggerConfigurator').getLogger('default'),
-    {startingPage, selectors} = require('../pages/startingPage');
+    {startingPage, genreElementSelectors, genreMenuSelectors} = require('../pages/startingPage'),
+    {actionPage, actionPageSelectors} = require('../pages/actionPage'),
+    {gamePage, gamePageSelectors} = require('../pages/gamePage'),
+    {ageVerificationPage} = require('../pages/ageVerificationPage'),
+    {steamPage} = require('../pages/steamPage');
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000;
 
-describe('main', () => {
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 90000;
+
+describe('Steam store ', () => {
     afterAll(async () => {
         await startingPage.close();
     });
-
     logger.info('starting main describe block');
-    it('it',async () => {
-        logger.info('Starting main It block...');
+
+    it('prices or discounts must be the same as in the trending section',async () => {
+        logger.info('Starting discount/price check.');
         logger.info('Opening starting page.');
-        await startingPage.open('https://store.steampowered.com/');
+        await startingPage.open();
         logger.info('Opening action page.');
-        await startingPage.goToAction3();
-        logger.info('Opened action page.');
-        expect(await startingPage.getHeaderText()).toContain('Browsing Action');
-        logger.info('Ending main it block');
+        await startingPage.navigateTo(genreMenuSelectors.games, genreElementSelectors.action);
+        logger.info('Trying to find maximum discount.');
+        const maxDiscount = await actionPage.getMaxDiscountOrPriceValue(actionPageSelectors.discountBlockSelector);
+        if(!maxDiscount) {
+            logger.info(`Have not found any discounts, trying to find maximum price instead.`);
+            const maxPrice = await actionPage.getMaxDiscountOrPriceValue(actionPageSelectors.priceBlockSelector);
+            logger.info(`Got max price value of ${maxPrice}.`);
+            await actionPage.navigateToGameWithDiscountOrPriceValue(actionPageSelectors.priceBlockSelector, maxPrice);
+            await checkAgeVerification();
+            expect(await gamePage.getPriceOrDiscount(gamePageSelectors.price)).toEqual(maxPrice);
+        } else {
+            logger.info(`Got max discount value of ${maxDiscount}%.`);
+            await actionPage.navigateToGameWithDiscountOrPriceValue(actionPageSelectors.discountBlockSelector, maxDiscount);
+            await checkAgeVerification();
+            expect(await gamePage.getPriceOrDiscount(gamePageSelectors.discount)).toEqual(maxDiscount);
+        }
+        logger.info('Ending main it block.');
     });
-    logger.info('Ending main describe block');
+
+    it('binary file must download correctly',async () => {
+        await steamPage.open();
+        await steamPage.pressDownloadButton();
+        expect(await steamPage.waitForFileToDownload()).toEqual(true);
+    });
+    logger.info('Ending main describe block.');
 });
+
+async function checkAgeVerification() {
+    if(await ageVerificationPage.isAtAgeVerification()) {
+        await ageVerificationPage.setRandomDate();
+        await ageVerificationPage.enterGamePage();
+    }
+}
