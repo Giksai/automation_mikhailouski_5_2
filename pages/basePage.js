@@ -8,7 +8,6 @@ const {Builder, By} = require("selenium-webdriver"),
     actions = driver.actions({bridge: true});
 
 class BasePage {
-
     async findElementByTextAndCss(cssSelector, text) {
         logger.debug(`findElementByTextAndCss: Trying to find an element with text ${text}.`);
         const foundElements = await driver.findElements(By.css(cssSelector));
@@ -26,13 +25,13 @@ class BasePage {
     * @param {String} rawValue Unformatted value
     */
     getDiscountOrPriceValue(rawValue) {
-    if(rawValue === 'Бесплатно' || rawValue === '.' || rawValue === '') return 0;
-    if(rawValue.includes('-')) rawValue = rawValue.replace('-', '');
-    if(rawValue.includes('%')) rawValue = rawValue.replace('%', '');
-    if(rawValue.includes('$')) rawValue = rawValue.replace('$', '');
-    if(rawValue.includes(' USD')) rawValue = rawValue.replace(' USD', '');
+        if(rawValue === 'Бесплатно' || rawValue === '.' || rawValue === '') return 0;
+        if(rawValue.includes('-')) rawValue = rawValue.replace('-', '');
+        if(rawValue.includes('%')) rawValue = rawValue.replace('%', '');
+        if(rawValue.includes('$')) rawValue = rawValue.replace('$', '');
+        if(rawValue.includes(' USD')) rawValue = rawValue.replace(' USD', '');
 
-    return parseFloat(rawValue);
+        return parseFloat(rawValue);
     }
 
     async hoverOverElement(elementCssSelector, time = 1) {

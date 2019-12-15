@@ -36,13 +36,15 @@ describe('Steam store ', () => {
             await checkAgeVerification();
             expect(await gamePage.getPriceOrDiscount(gamePageSelectors.discount)).toEqual(maxDiscount);
         }
-        logger.info('Ending main it block.');
+        logger.info('Ending discount/price check.');
     });
 
     it('binary file must download correctly',async () => {
+        logger.info(`Starting file download section.`);
         await steamPage.open();
         await steamPage.pressDownloadButton();
         expect(await steamPage.waitForFileToDownload()).toEqual(true);
+        logger.info(`Ending file download section.`);
     });
     logger.info('Ending main describe block.');
 });

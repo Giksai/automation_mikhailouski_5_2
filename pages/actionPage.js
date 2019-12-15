@@ -27,7 +27,6 @@ class ActionPage extends BasePage {
     }
 }
 
-
 function getMaxValue(firstComparer, secondComparer) {
     return firstComparer > secondComparer ? firstComparer : secondComparer;
 }

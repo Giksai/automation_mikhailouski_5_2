@@ -13,7 +13,6 @@ const privateSelectors = {
 const storeLink = 'https://store.steampowered.com/';
 
 class StartingPage extends BasePage {
-
     async navigateTo(genreMenuSelector, genreElementSelector) {
         logger.debug(`navigateTo: Trying to navigate to ${genreElementSelector}.`);
         await super.hoverOverElement(genreMenuSelector);
