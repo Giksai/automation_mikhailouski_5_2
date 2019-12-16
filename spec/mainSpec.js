@@ -1,5 +1,4 @@
-const data = require('./data'),
-    logger = require('../logger/loggerConfigurator').getLogger('default'),
+const logger = require('../logger/loggerConfigurator').getLogger('default'),
     {startingPage, genreElementSelectors, genreMenuSelectors} = require('../pages/startingPage'),
     {actionPage, actionPageSelectors} = require('../pages/actionPage'),
     {gamePage, gamePageSelectors} = require('../pages/gamePage'),
