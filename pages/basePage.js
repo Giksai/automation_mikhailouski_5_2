@@ -1,5 +1,4 @@
 require('chromedriver');
-require('geckodriver');
 const {Builder, By} = require("selenium-webdriver"),
     logger = require('../logger/loggerConfigurator').getLogger('default'),
     driver = new Builder()

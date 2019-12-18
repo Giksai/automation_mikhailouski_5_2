@@ -1,5 +1,4 @@
-const {driver, BasePage, logger} = require('./basePage'),
-    {By} = require('selenium-webdriver');
+const {driver, BasePage, logger} = require('./basePage');
 
 const ageVerificationPageSelectors = {
     year: '#ageYear ',

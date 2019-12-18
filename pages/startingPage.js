@@ -1,5 +1,4 @@
-const {driver, BasePage, logger} = require('./basePage'),
-    {By, until} = require('selenium-webdriver');
+const {BasePage, logger} = require('./basePage');
 
 const genreMenuSelectors = {
     games: 'div#genre_tab'

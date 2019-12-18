@@ -1,5 +1,5 @@
 const {driver, BasePage, logger} = require('./basePage'),
-    {By, until} = require('selenium-webdriver'),
+    {By} = require('selenium-webdriver'),
     fs = require('fs'),
     config = require('../config'),
     path = require('path');
